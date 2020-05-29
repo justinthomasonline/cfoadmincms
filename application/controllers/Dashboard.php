@@ -377,19 +377,32 @@ $result = $this->Contents->Checkunique($contentUrl);
    {
     $data['title']="Menus";
     $data['pages']=$this->Contents->getallmenus('menus');
+    $data['headermenucount']=$this->Contents->getmenucount('header');
+    $data['footermenucount']=$this->Contents->getmenucount('footer');
+
+
       $this->load->view('includes/header',$data);
       $this->load->view('dashboard/menus');
       $this->load->view('includes/footer');
    }
 
-   function submenus()
+   function submenus($parentid="")
    {
          $data['title']="Sub Menus";
-         $data['submenu']=$this->Contents->getsubmenus();
+
+        
+         $data['submenu']=$this->Contents->getsubmenus($parentid);
+
+         $data['parentid']=$parentid;
+
+    $data['submenucount']=$this->Contents->getsubmenucount($parentid);
+
       $this->load->view('includes/header',$data);
       $this->load->view('dashboard/submenu');
       $this->load->view('includes/footer');
    }
+
+
 
 
    function addmenus()
@@ -400,7 +413,7 @@ $result = $this->Contents->Checkunique($contentUrl);
      $this->form_validation->set_rules('menulocation', 'Menu Location', 'required'); 
     $this->form_validation->set_rules('title', 'Title', 'required');
     $this->form_validation->set_rules('maincorrespondingpage', 'corresponding page', 'required'); 
-    $this->form_validation->set_rules('priority', 'priority', 'required'); 
+   
     
     
 
@@ -415,6 +428,11 @@ $result = $this->Contents->Checkunique($contentUrl);
     {
 
 
+      $maxpriority = $this->Contents->maxvalue('menus','menuPriority',$_POST['menulocation']);
+
+
+     
+
         if(isset($_POST['ispublished']))
         {
             $ispublished = 1;
@@ -428,9 +446,11 @@ $result = $this->Contents->Checkunique($contentUrl);
         'menuTitle'=>trim($_POST['title']),
         'menuUrl'=>trim($_POST['maincorrespondingpage']),
         'menuLocation'=>trim($_POST['menulocation']),
-        'menuPriority'=>trim($_POST['priority']),
+        'menuPriority'=>$maxpriority+1,
         'menuStatus'=>$ispublished
       );
+
+
 
 
 
@@ -453,17 +473,20 @@ $result = $this->Contents->Checkunique($contentUrl);
 
 
 
- function addsubmenus()
+ function addsubmenus($parentid="")
  {
-  $data['title']="Add Menus";
+     $data['title']="Add sub menus";
      $data['menucontents']=$this->Contents->getallcontents();
       $data['parentmenu']=$this->Contents->getallheadermenus('menus');
+
+       $data['parentid']=$parentid;
+      
 
 
     $this->form_validation->set_rules('parentMenu', 'Parent menu', 'required');
     $this->form_validation->set_rules('title', 'Title', 'required');
     $this->form_validation->set_rules('maincorrespondingpage', 'corresponding page', 'required'); 
-    $this->form_validation->set_rules('priority', 'priority', 'required'); 
+   
     
 
     if ($this->form_validation->run() == FALSE) { 
@@ -476,6 +499,7 @@ $result = $this->Contents->Checkunique($contentUrl);
     }else
     {
 
+      $maxpriority = $this->Contents->maxvalue_submenu('submenu','subMenuPriority');
 
 
         if(isset($_POST['ispublished']))
@@ -491,7 +515,7 @@ $result = $this->Contents->Checkunique($contentUrl);
         'subMenuTilte'=>trim($_POST['title']),
         'subMenuUrl'=>trim($_POST['maincorrespondingpage']),
         'menuId'=>trim($_POST['parentMenu']),
-        'subMenuPriority'=>trim($_POST['priority']),
+        'subMenuPriority'=>$maxpriority+1,
         'subMenuStatus'=>$ispublished
       );
 
@@ -504,8 +528,10 @@ $result = $this->Contents->Checkunique($contentUrl);
        }else{
         $this->session->set_flashdata('msg_error', 'Unable to insert, try later');
        }
+      
 
-       redirect('Dashboard/addsubmenus');
+         redirect('Dashboard/addsubmenus/'.$parentid);
+       
 
 
 
@@ -1149,7 +1175,7 @@ $data['id']=$id;
       $this->form_validation->set_rules('menulocation', 'Menu Location', 'required'); 
      $this->form_validation->set_rules('title', 'Title', 'required');
      $this->form_validation->set_rules('maincorrespondingpage', 'corresponding page', 'required'); 
-     $this->form_validation->set_rules('priority', 'priority', 'required'); 
+      
 
    if ($this->form_validation->run() == FALSE) 
    { 
@@ -1162,7 +1188,22 @@ $data['id']=$id;
      }else
      {
 
-     $result = $this->Contents->updateMainMenu($id);
+      if(isset($_POST['ispublished']))
+        {
+            $ispublished = 1;
+        }else
+        {
+            $ispublished = 0;
+        }
+
+        $data=array(
+          'menuLocation'=>$_POST['menulocation'],
+          'menuUrl'=>$_POST['maincorrespondingpage'],
+          'menuTitle'=>$_POST['title'],
+          'menuStatus'=>$ispublished
+        );
+
+     $result = $this->Contents->updateMainMenu($id,$data);
 
      if($result==1)
        {
@@ -1177,6 +1218,104 @@ $data['id']=$id;
 
      }
 
+}
+
+
+
+
+function menu_priority_update()
+{
+
+      $result = $this->Contents->menu_priority_update();
+
+      echo $result;
+}
+
+
+
+function submenu_priority_update()
+{
+
+      $result = $this->Contents->submenu_priority_update();
+
+      echo $result;
+}
+
+
+function deletemenu()
+{
+  $result = $this->Contents->deletemenu();
+
+      echo $result;
+}
+
+
+function editsubmenu($submenuId="", $parentid="")
+{
+
+    $data['title']="Edit sub menus";
+     $data['menucontents']=$this->Contents->getallcontents();
+     $data['parentmenu']=$this->Contents->getallheadermenus('menus');
+      $data['submenu']=$this->Contents->getsubmenubyid($submenuId);
+
+       $data['parentid']=$parentid;
+       $data['submenuId']=$submenuId;
+      
+
+
+    $this->form_validation->set_rules('parentMenu', 'Parent menu', 'required');
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $this->form_validation->set_rules('maincorrespondingpage', 'corresponding page', 'required'); 
+   
+    
+
+    if ($this->form_validation->run() == FALSE) { 
+    
+    
+      $this->load->view('includes/header',$data);
+      $this->load->view('dashboard/editsubmenu');
+      $this->load->view('includes/footer');
+
+    }else
+    {
+
+     
+
+
+        if(isset($_POST['ispublished']))
+        {
+            $ispublished = 1;
+        }else
+        {
+            $ispublished = 0;
+        }
+
+
+      $data=array(
+        'subMenuTilte'=>trim($_POST['title']),
+        'subMenuUrl'=>trim($_POST['maincorrespondingpage']),
+        'menuId'=>trim($_POST['parentMenu']),
+        'subMenuStatus'=>$ispublished
+      );
+
+
+
+       $result = $this->Contents->updateSubMenu($submenuId,$data);
+       if($result==1)
+       {
+        $this->session->set_flashdata('msg_success', 'Successfully inserted');
+       }else{
+        $this->session->set_flashdata('msg_error', 'Unable to insert, try later');
+       }
+      
+
+         redirect('Dashboard/editsubmenu/'.$submenuId.'/'.$parentid);
+       
+
+
+
+    }
+  
 }
 
 

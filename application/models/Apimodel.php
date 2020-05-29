@@ -121,6 +121,101 @@ return json_encode($headermenu,JSON_PRETTY_PRINT);
 }
 
 
+function gethomepage()
+{
+
+
+     $response = array();
+     $banner = array();
+     $homepageContent=array();
+     $course=array();
+     $partners=array();
+
+    $bannerQuery = "select * from banner where isPublished='1' ORDER BY BannerPriority ASC";
+    $bannerRes = $this->db->query($bannerQuery);  
+    $bannerResult=$bannerRes->result();
+
+    foreach ($bannerResult as $row) 
+    {
+      $banner[]=array(
+        'BannerTitle'=>$row->BannerTitle,
+        'BannerText'=>$row->BannerText,
+        'BannerImage'=>$row->BannerImage
+      );
+
+
+     
+    }
+
+    $response['banner'] = $banner;
+
+
+
+    $HomepageQuery = "select * from contents where isHomepage='1' and isPublished='1'";
+    $HomepageRes = $this->db->query($HomepageQuery);  
+    $HomepageResult=$HomepageRes->result();
+
+    foreach ($HomepageResult as $row) 
+    {
+      $homepageContent[]=array(
+        'ContentTitle'=>$row->ContentTitle,
+        'content'=>$row->content,
+        'contentMeta'=>$row->contentMeta
+      );
+
+
+     
+    }
+
+    $response['homepageContent'] = $homepageContent;
+
+
+    $CourseQuery = "select * from contents  where ContentType='Course' and isPublished='1'";
+    $CourseRes = $this->db->query($CourseQuery);  
+    $CourseResult=$CourseRes->result();
+
+    foreach ($CourseResult as $row) 
+    {
+      $course[]=array(
+        'ContentTitle'=>$row->ContentTitle,
+        'content'=>$row->content,
+        'contentMeta'=>$row->contentMeta,
+        'contentUrl'=>$row->contentUrl,
+        'FeaturedImage'=>$row->FeaturedImage,
+        );
+
+
+     
+    }
+
+    $response['course'] = $course;
+
+
+
+$PartnersQuery = "select * from contents  where ContentType='Partners' and isPublished='1'";
+    $PartnersRes = $this->db->query($PartnersQuery);  
+    $PartnersResult=$PartnersRes->result();
+
+    foreach ($PartnersResult as $row) 
+    {
+      $partners[]=array(
+        'FeaturedImage'=>$row->FeaturedImage,
+          );
+
+
+     
+    }
+
+    $response['partners'] = $partners;
+
+
+
+
+
+    return json_encode($response,JSON_PRETTY_PRINT);
+
+
+}
 
 
 }

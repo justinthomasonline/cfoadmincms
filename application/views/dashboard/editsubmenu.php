@@ -7,7 +7,7 @@
               <div class="panel-body">
               
           <input type="hidden" value="<?php echo site_url('Dashboard/checkpriority');?>" id="check_priority">
-                <form action="<?php echo site_url('Dashboard/addsubmenus/'.$parentid);?>" method="post">
+                <form action="<?php echo site_url('Dashboard/editsubmenu/'.$submenuId.'/'.$parentid);?>" method="post">
                     <div class="form-group">
                     <label>Parent Menu</label>
                     <select class="form-control" id="parentMenu" name="parentMenu">
@@ -31,7 +31,7 @@
 
                    <div class="form-group">
                     <label>Menu Title</label>
-                    <input type="text" class="form-control" placeholder="Menu Title" id="title" name="title" value="<?=set_value('title')?>">
+                    <input type="text" class="form-control" placeholder="Menu Title" id="title" name="title" value="<?=set_value('title',$submenu->subMenuTilte);?>">
                     <span class="text-danger custom_error" id="title_error"> <?php echo form_error('title'); ?></span>
                   </div>
 
@@ -42,12 +42,12 @@
               
                      <select class="form-control" id="maincorrespondingpage" name="maincorrespondingpage">
                           <option value="">Select</option>
-                        <option value="blank">Blank Page</option>
+                        <option value="blank" <?php if( $submenu->subMenuUrl == "blank") echo "selected";?> >Blank Page</option>
                                   <?php 
 
                                  foreach($menucontents as $row)
                                   { ?>
-           <option value="<?php echo $row['contentUrl'];?>" <?php echo set_select('maincorrespondingpage',  $row['contentUrl']); ?> > <?php echo strtoupper($row['ContentTitle']);?></option>
+           <option value="<?php echo $row['contentUrl'];?>" <?php echo set_select('maincorrespondingpage',  $submenu->subMenuUrl); ?> > <?php echo strtoupper($row['ContentTitle']);?></option>
                 
                                  <?php 
 
@@ -66,7 +66,7 @@
 
    <div class="checkbox">
                     <label>
-                      <input type="checkbox" name="ispublished"  checked> Published
+                      <input type="checkbox" name="ispublished" <?php if($submenu->subMenuStatus=="1") echo "checked";?> > Published
                     </label>
                   </div>
 

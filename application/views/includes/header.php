@@ -94,7 +94,7 @@
 
                  <a href="<?php echo site_url('Dashboard/menus');?>" class="list-group-item"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Menus </a>
 
-               <a href="<?php echo site_url('Dashboard/submenus');?>" class="list-group-item"><span class="glyphicon glyphicon-align-center" aria-hidden="true"></span> sub menus </a>
+               <!-- <a href="<?php echo site_url('Dashboard/submenus');?>" class="list-group-item"><span class="glyphicon glyphicon-align-center" aria-hidden="true"></span> sub menus </a> -->
 
                <a href="<?php echo site_url('Dashboard/settings');?>" class="list-group-item"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> settings </a>
 

@@ -66,4 +66,17 @@ class Api extends CI_Controller {
 	 // 		print_r($result);
 	 // 	echo '</pre>';
 	 }
+
+
+
+
+	 public function homePage()
+	 {
+	 	$result = $this->Apimodel->gethomepage();
+	 	echo $result;
+
+	  // echo '<pre>';
+	 	// 	print_r($result);
+	  // echo '</pre>';
+	 }
 }

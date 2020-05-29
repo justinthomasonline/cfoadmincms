@@ -136,6 +136,22 @@ function updatebanner($table,$data,$id)
 }
 
 
+function updateMainMenu($id,$data)
+{
+  $this->db->where('menuId', $id);
+   $this->db->update('menus', $data);
+
+    return true;
+}
+
+function updateSubMenu($id,$data)
+{
+  $this->db->where('subMenuId', $id);
+   $this->db->update('submenu', $data);
+
+    return true;
+}
+
 
    function Checkunique($str)
    {
@@ -245,11 +261,18 @@ function ajax_check_unique_updation($table,$id,$content)
 
    function getallmenus($table)
    {
-    $query = "select * from $table ORDER BY menuId ASC";
+    $query = "select * from $table ORDER BY menuPriority ASC";
     $res = $this->db->query($query);  
     return $res->result("array");
    }
    
+
+   function getsubmenubyid($submenuId)
+   {
+    $query = "select * from submenu where submenuId='$submenuId'";
+    $res = $this->db->query($query);  
+    return $res->row();
+   }
 
    function getallheadermenus($table)
    {
@@ -265,9 +288,12 @@ function ajax_check_unique_updation($table,$id,$content)
 	 }
 
 
-   function getsubmenus()
+   function getsubmenus($parentid="")
    {
-    $query = "select * from submenu";
+    
+      $query = "select * from submenu where menuId='$parentid' ORDER BY subMenuPriority ASC";
+   
+    
     $res = $this->db->query($query);  
     $result=$res->result();
    $submenu= array();
@@ -411,63 +437,145 @@ function get_mainmenu_byid($id)
 }
 
 
-function updateMainMenu($id)
-{
-  
 
- $query = "select * from menus where menuPriority='$_POST[priority]' and menuLocation= '$_POST[menulocation]' ";
-
-  $res = $this->db->query($query); 
-
-      $existing = $res->result();
-        echo $this->db->last_query();
+ function maxvalue($table, $field,$location)
+ {
 
 
-exit();
-  if(isset($_POST['ispublished']))
-        {
-            $ispublished = 1;
-        }else
-        {
-            $ispublished = 0;
-        }
+  $query = "SELECT MAX($field) AS maxpriority FROM $table where menuLocation='$location' ";
+  $res =  $this->db->query($query); 
 
-  if ($this->db->affected_rows()==1)
+  if($res->row()->maxpriority==NULL)
   {
-       
-      $data=array(
-'menuTitle'=>$_POST['title'],
-'menuUrl'=>$_POST['maincorrespondingpage'],
-'menuLocation'=>$_POST['menulocation'],
-'menuPriority'=>$_POST['priority'],
-'menuStatus'=>$ispublished
-      );
-
-   // $this->db->where('menuId', $id);
-   // $this->db->update('menus', $data);
-
+    return 1;
   }else
   {
-         
-      $q1= "select * from menus where menuPriority='$_POST[priority]' and menuLocation= '$_POST[menulocation]' and menuId<>'$id' ";
-      $res = $this->db->query($q1); 
-
-      $existing = $res->result();
-        echo $existing->menuId;
+    return $res->row()->maxpriority;
   }
+
+
+ }
+
+
+ function maxvalue_submenu($table,$field)
+ {
+
+ $query = "SELECT MAX($field) AS maxpriority FROM $table";
+  $res =  $this->db->query($query); 
+
+
+
+  if($res->row()->maxpriority==NULL)
+  {
+    return 0;
+  }else
+  {
+    return $res->row()->maxpriority;
+  }
+
+
+ }
+
+
+ function getmenucount($field)
+ {
+  $query="select menuId from menus where menulocation='$field'";
+  $res=$this->db->query($query);
+
+  return $this->db->affected_rows();
+ }
  
 
- echo $this->db->last_query(); exit();
- return 1;
+ function getsubmenucount($parentid="")
+ {
+   $query="select subMenuId from submenu where menuId='$parentid'"; 
+  $res=$this->db->query($query);
+
+  return $this->db->affected_rows();
+ }
+ 
 
 
- // if($priority == $_POST['priority'])
- // {
 
- // }
+function menu_priority_update()
+{
+
+  $q="select menuId from menus where menuPriority='$_POST[newvalue]' and menulocation='$_POST[menulocation]'";
+  $res=$this->db->query($q);
+
+  $existing_priority_Id =  $res->row()->menuId;
+
+  $q="UPDATE menus SET menuPriority='$_POST[newvalue]' WHERE menuId='$_POST[menuId]' and menulocation='$_POST[menulocation]'";
+
+  $res=$this->db->query($q); 
+
+   $q="UPDATE menus SET menuPriority='$_POST[existingvalue]' WHERE menuId='$existing_priority_Id' and menulocation='$_POST[menulocation]'";
+
+  $res=$this->db->query($q);
+
+  return 1;
+
+
+
+   // $q="UPDATE menus SET menuPriority='$_POST[newvalue]' WHERE menuId='$_POST[menuId]' and menulocation='$_POST[menulocation]'";
+
 
 
 }
+
+
+function submenu_priority_update()
+
+{
+
+  $q="select subMenuId from submenu where subMenuPriority='$_POST[newvalue]'";
+  $res=$this->db->query($q);
+
+  $existing_priority_Id =  $res->row()->subMenuId;
+
+  $q="UPDATE submenu SET subMenuPriority='$_POST[newvalue]' WHERE subMenuId='$_POST[submenuId]'";
+
+  $res=$this->db->query($q); 
+
+   $q="UPDATE submenu SET subMenuPriority='$_POST[existingvalue]' WHERE subMenuId='$existing_priority_Id'";
+
+  $res=$this->db->query($q);
+
+  return 1;
+
+
+
+   // $q="UPDATE menus SET menuPriority='$_POST[newvalue]' WHERE menuId='$_POST[menuId]' and menulocation='$_POST[menulocation]'";
+
+
+
+}
+
+
+
+function deletemenu()
+{
+  if($_POST['menutype']=="mainmenu")
+  {
+
+     $this -> db -> where('menuId', $_POST['menuId']);
+     $this -> db -> delete('menus');
+
+     $this -> db -> where('menuId', $_POST['menuId']);
+     $this -> db -> delete('submenu');
+
+
+  }else if($_POST['menutype']=="submenu")
+  {
+     $this -> db -> where('subMenuId', $_POST['menuId']);
+     $this -> db -> delete('submenu');
+
+  }
+
+
+return 1;
+}
+
 
 
 }

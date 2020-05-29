@@ -37,7 +37,7 @@
               
                      <select class="form-control" id="maincorrespondingpage" name="maincorrespondingpage">
                           <option value="">Select</option>
-                        <option value="blank" <?php if($mainmenu[0]['menuTitle']=='blank') echo "selected";?> >Blank Page</option>
+                        <option value="blank" <?php if($mainmenu[0]['menuUrl']=='blank') echo "selected";?> >Blank Page</option>
                                   <?php 
 
                                  foreach($menucontents as $row)
@@ -55,25 +55,7 @@
 
 
 
-        <div class="form-group">
-                    <label>Menu priority</label>
-              
-                     <select class="form-control" name="priority">
-                          <option value="">Select</option>
-                        
-                                  <?php 
-
-                                  for($i=1; $i<=10; $i++)
-                                  { ?>
-                                 <option value="<?php echo $i;?>" <?php if( $mainmenu[0]['menuPriority'] == $i) echo "selected"; ?> > <?php echo $i;?> </option>
-                                <?php   }
-
-                                  ?>
-                    </select>
-
-                <span class="text-danger " id="title_error"> <?php echo form_error('priority'); ?></span>
-
-                  </div>
+       
 
 
 

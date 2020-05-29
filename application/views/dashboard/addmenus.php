@@ -55,25 +55,7 @@
 
 
 
-        <div class="form-group">
-                    <label>Menu priority</label>
-              
-                     <select class="form-control" name="priority">
-                          <option value="">Select</option>
-                        
-                                  <?php 
-
-                                  for($i=1; $i<=10; $i++)
-                                  { 
-                                    echo '<option value="'.$i.'">'.$i.'</option>';
-                                  }
-
-                                  ?>
-                    </select>
-
-                <span class="text-danger " id="title_error"> <?php echo form_error('priority'); ?></span>
-
-                  </div>
+       
 
 
 
