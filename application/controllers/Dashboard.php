@@ -89,6 +89,15 @@ class Dashboard extends CI_Controller {
 
     else {
 
+        if(isset($_POST['iscontact']))
+        {
+            $iscontact = 1;
+        }else
+        {
+            $iscontact = 0;
+        }
+
+
         if(isset($_POST['ispublished']))
         {
             $ispublished = 1;
@@ -96,6 +105,8 @@ class Dashboard extends CI_Controller {
         {
             $ispublished = 0;
         }
+
+
 
         // if(isset($_FILES['featured_image']) && !empty($_FILES['featured_image']['name']))
         // { 
@@ -124,6 +135,7 @@ class Dashboard extends CI_Controller {
             'ContentTitle'=>$_POST['title'],
             'contentUrl'=>$contentUrl,
             'isPublished' => $ispublished,
+            'isContactpage'=> $iscontact,
             'contentMeta' => $_POST['meta_data'],
             'content' => $_POST['editor1'],
             'FeaturedImage'=>$featured_image
@@ -640,7 +652,7 @@ function addpartners()
 function banners()
 {
 
-      $data['title'] = "List Partners";
+      $data['title'] = "List Banners";
       $data['pages']=$this->Contents->getallbanners();
       $this->load->view('includes/header',$data);
       $this->load->view('dashboard/banners');
@@ -753,6 +765,16 @@ function editpages($id="")
             $ispublished = 0;
         }
 
+
+
+         if(isset($_POST['iscontact']))
+        {
+            $iscontact = 1;
+        }else
+        {
+            $iscontact = 0;
+        }
+
         // if(isset($_FILES['featured_image']) && !empty($_FILES['featured_image']['name']))
         // { 
         //  $file = $_FILES['featured_image']['tmp_name'];
@@ -780,6 +802,7 @@ function editpages($id="")
             'ContentTitle'=>trim($_POST['title']),
             'contentUrl'=>trim($contentUrl),
             'isPublished' => $ispublished,
+            'isContactpage'=>$iscontact,
             'contentMeta' => $_POST['meta_data'],
             'content' => $_POST['editor'],
             'FeaturedImage'=>$featured_image
@@ -967,7 +990,7 @@ function editevents($id="")
 
         $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
         $data = array(
-            'ContentType'=>'Page',
+            'ContentType'=>'Events',
             'ContentTitle'=>trim($_POST['title']),
             'contentUrl'=>trim($contentUrl),
             'isPublished' => $ispublished,
@@ -1131,7 +1154,7 @@ function editbanner($id="")
         $this->session->set_flashdata('msg_error', 'Unable to update, try later');
        }
 
-       redirect('Dashboard/editbanner/'.$_POST['bannerid']);
+       redirect('Dashboard/editbanner/'.$id);
     }
 
 
@@ -1317,6 +1340,115 @@ function editsubmenu($submenuId="", $parentid="")
     }
   
 }
+
+function settings()
+{
+        $data['title']="settings";
+        $this->load->view('includes/header',$data);
+        $this->load->view('dashboard/settings');
+        $this->load->view('includes/footer');
+}
+
+
+function homepagesetting()
+{
+
+ $this->form_validation->set_rules('maincorrespondingpage', 'corresponding page', 'required'); 
+   if ($this->form_validation->run() == FALSE)
+    { 
+
+  $data['menucontents']=$this->Contents->getallcontents();
+  $data['title']="Home page settings";
+        $this->load->view('includes/header',$data);
+        $this->load->view('dashboard/homepagesetting');
+        $this->load->view('includes/footer');
+    }
+    else
+    {
+     
+
+      $result = $this->Contents->updatehomepagesetting($_POST['maincorrespondingpage']);
+
+       if($result==1)
+       {
+        $this->session->set_flashdata('msg_success', 'Successfully inserted');
+       }else{
+        $this->session->set_flashdata('msg_error', 'Unable to insert, try later');
+       }
+      
+
+         redirect('Dashboard/homepagesetting/');
+
+    }
+
+}
+
+
+
+function mailforwardsetting()
+{
+
+ $this->form_validation->set_rules('Primaryemail','Primary Email', 'required|valid_email');
+ $this->form_validation->set_rules('Carboncopy','Carbon copy','required|valid_email');  
+
+if(isset($_POST['Primaryemail']) && $_POST['Carboncopy'])
+{
+  $this->form_validation->set_rules('Carboncopy','Carbon copy','required|valid_email|callback_check_equalEmail['.$_POST['Primaryemail'].']');
+
+    $this->form_validation->set_message('check_equalEmail','Same emails are not allowed');
+  
+}
+ 
+   if ($this->form_validation->run() == FALSE)
+    { 
+
+  $data['mail']=$this->Contents->getforwardingmail();
+  $data['title']="Mail settings";
+        $this->load->view('includes/header',$data);
+        $this->load->view('dashboard/mailforwardsetting');
+        $this->load->view('includes/footer');
+    }
+    else
+    {
+     
+     $data=array(
+      'PrimaryEmail'=>$_POST['Primaryemail'],
+      'CarbonCopy'=>$_POST['Carboncopy']
+     );
+
+
+      $result = $this->Contents->updatemailforwardsetting($data);
+
+       if($result==1)
+       {
+        $this->session->set_flashdata('msg_success', 'Successfully Updated');
+       }else{
+        $this->session->set_flashdata('msg_error', 'Unable to insert, try later');
+       }
+      
+
+         redirect('Dashboard/mailforwardsetting/');
+
+    }
+
+}
+
+
+function check_equalEmail($Carboncopy, $primary)
+{
+
+  
+    if($primary==$Carboncopy)
+    {
+       return false;
+    }else
+    {
+        return true;
+    }
+
+}
+
+
 
 
 

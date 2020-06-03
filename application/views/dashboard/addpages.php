@@ -33,6 +33,13 @@
                       <input type="checkbox" name="ispublished"  checked> Published
                     </label>
                   </div>
+
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="iscontact"  > Add contact form
+                    </label>
+                  </div>
+
                   <!-- <div class="form-group">
                     <label>Meta Tags</label>
                     <input type="text" class="form-control" placeholder="Add Some Tags..." value="tag1, tag2">

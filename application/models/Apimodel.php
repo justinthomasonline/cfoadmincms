@@ -29,6 +29,7 @@ foreach($result as $row)
         'ContentTitle'=>$row->ContentTitle,
         'ContentUrl'=>$row->contentUrl,
         'isPublished'=>$row->isPublished,
+        'isContactpage'=>$row->isContactpage,
         'Category'=>$row->category,
         'FeaturedImage'=>$row->FeaturedImage,
         'ContentMeta'=>$row->contentMeta,
@@ -216,6 +217,14 @@ $PartnersQuery = "select * from contents  where ContentType='Partners' and isPub
 
 
 }
+
+
+
+public function insert_contact($contactData)
+  {
+      $this->db->insert('contacts', $contactData);
+      return $this->db->insert_id();
+  }
 
 
 }

@@ -12,7 +12,8 @@
      CKEDITOR.replace( 'editor1', {
        height:300,
        filebrowserUploadUrl:"<?php echo site_url('Dashboard/upload');?>",
-       filebrowserUploadMethod :'form'
+       filebrowserUploadMethod :'form',
+	   allowedContent: true
       
      });
 

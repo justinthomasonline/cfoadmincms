@@ -36,7 +36,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Welcome, Brad</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <li><a href="<?php echo site_url('Welcome/logout');?>">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

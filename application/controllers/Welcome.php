@@ -60,6 +60,13 @@ class Welcome extends CI_Controller {
 
 
 
+
+
+		}
+	}
+
+
+		
 			function logout()
 			{
 					$user_data = $this->session->all_userdata();
@@ -74,6 +81,4 @@ class Welcome extends CI_Controller {
 			}
 
 
-		}
-	}
 }

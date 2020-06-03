@@ -50,21 +50,17 @@ class Contents extends CI_Model {
     $this->db->where('contentId', $id);
    $this->db->update($table, $data);
 
-    if(isset($_POST['infoTitle']))
+  
+
+   
+if(isset($_POST['infoTitle']))
     {
     $course_more =array();
    
         foreach($_POST['infoTitle'] as $key =>$item)
         {
 
-            if(isset($_POST['infoBoxed'][$key]))
-            {
-                $infoboxed = 1;
-            }else
-            {
-                $infoboxed = 0;
-            }
-
+            
             if(isset($_POST['CourseMoreId'][$key]))
             {
               
@@ -73,13 +69,17 @@ class Contents extends CI_Model {
                     'ContentId'=>$id,
                     'InfoTitle'=> $_POST['infoTitle'][$key],
                     'InfoMessage'=>$_POST['infoMessage'][$key],
-                    'InfoBoxed'=>$infoboxed
+                    'InfoBoxed'=> $_POST['infoBoxed'][$key]
                 );
+              
+
           }
 
            
 
         }
+
+
 
         
         $this->db->update_batch('content_more',$content_more,'CourseMoreId');
@@ -253,7 +253,7 @@ function ajax_check_unique_updation($table,$id,$content)
 
    function getallcontents()
    {
-    $query = "select ContentTitle, contentUrl, ContentType from contents ORDER BY contentId ASC";
+    $query = "select ContentTitle, contentUrl, ContentType, isHomepage,contentId from contents ORDER BY contentId ASC";
     $res = $this->db->query($query);  
     return $res->result("array");
    }
@@ -367,6 +367,7 @@ foreach($result as $row)
                     'ContentTitle'=>$row->ContentTitle,
                     'contentUrl'=>$row->contentUrl,
                     'isPublished'=>$row->isPublished,
+                    'isContactpage'=>$row->isContactpage,
                     'FeaturedImage'=>$row->FeaturedImage,
                     'contentMeta'=>$row->contentMeta,
                     'content'=>$row->content,
@@ -577,6 +578,45 @@ return 1;
 }
 
 
+function updatehomepagesetting($id)
+
+{
+
+ $q = "select contentId from contents where isHomepage='1'";
+ $res=$this->db->query($q);
+
+$existingid=  $res->row()->contentId;
+
+  $q="UPDATE contents SET isHomepage='0' WHERE contentId='$existingid'";
+
+  $res=$this->db->query($q); 
+
+   $q="UPDATE contents SET isHomepage='1' WHERE contentId='$id'";
+
+  $res=$this->db->query($q);
+
+  return 1;
+}
+
+
+
+function getforwardingmail()
+{
+  $q="select *  from contactformemail where emailId='1'";
+  $res=$this->db->query($q);
+
+  return $res->row();
+
+}
+
+
+function updatemailforwardsetting($data)
+{
+  $this->db->where('emailId', '1');
+   $this->db->update('contactformemail', $data);
+
+   return 1;
+}
 
 }
 

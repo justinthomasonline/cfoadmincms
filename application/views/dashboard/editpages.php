@@ -2,14 +2,14 @@
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Add Page</h3>
+                <h3 class="panel-title">Edit Page</h3>
               </div>
               <div class="panel-body">
                <input type="hidden" value="<?php echo site_url('Dashboard/ajax_check_unique_updation');?>" id="ajax_check_unique" >
                <input type="hidden" value="<?php echo site_url('Dashboard/upload');?>" id="ckeditor_img_url" >
 
             
-                <form action="<?php echo site_url('Dashboard/editpages');?>" method="post" id="EditFormSubmit" enctype="multipart/form-data">
+                <form action="<?php echo site_url('Dashboard/editpages/'. $pages[0]['contentId']);?>" method="post" id="EditFormSubmit" enctype="multipart/form-data">
                   <input type="hidden" value="<?php echo $pages[0]['contentId'];?>" name="contentId" id="contentId">
                   <div class="form-group">
                     <label>Page Title</label>
@@ -37,6 +37,14 @@
                     </label>
                   </div>
                   
+
+                   <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="iscontact" <?php if($pages[0]['isContactpage']=="1")  echo "checked";?>> Add contact form
+                    </label>
+                  </div>
+
+
                   <div class="form-group">
                     <label>Meta Description</label>
                     <input type="text" class="form-control" id="meta_data" placeholder="Add Meta Description..." name="meta_data" value="<?=set_value('meta_data',$pages[0]['contentMeta'] )?>">
@@ -90,17 +98,21 @@
 
                   </div>
 
-                  <div class="checkbox">
-                  <label>
-                    <input type="checkbox" name="infoBoxed[]"  <?php if($cm['InfoBoxed']=="1") echo "checked"; ?> > Boxed
-                  </label>
-                </div>
+                  <div class="form-group">
+                  <label>Boxed</label>
+                  <select name="infoBoxed[]" class="form-control">
+                    <option value="1" <?php if($cm['InfoBoxed']=="1") echo "selected";?> >Boxed</option>
+                    <option value="0" <?php if($cm['InfoBoxed']=="0") echo "selected";?> >Not boxed</option>
+                  </select>
+             
+               </div>
                   <hr>
 
                                <script>
     CKEDITOR.replace( 'editor<?php echo $i;?>', {
         height:200,
-        filebrowserUploadUrl:'<?php echo site_url('Dashboard/upload');?>'
+        filebrowserUploadUrl:'<?php echo site_url('Dashboard/upload');?>',
+         allowedContent: true
       });
       </script> 
 

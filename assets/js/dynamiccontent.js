@@ -9,7 +9,8 @@ $('#generatecontent').click(function(){
 <script>
     CKEDITOR.replace( 'editor`+i+`', {
         height:200,
-        filebrowserUploadUrl:'`+url+`'
+        filebrowserUploadUrl:'`+url+`',
+        allowedContent: true
       });
       </script>             
       
@@ -46,6 +47,9 @@ $("#FormSubmit").submit(function(e){
   
   e.preventDefault();
   var self=this;
+
+
+  
 
   var error_msg_title = ""; 
   var error_msg_content_url = ""; 
@@ -133,49 +137,65 @@ $("#FormSubmit").submit(function(e){
 
 
 
+
+
 if($('#featuredimage').is(":visible"))
 
 {
-  if ($('#featuredimage').get(0).files.length  != 0)     
- {
-                var featured_image_size=$('#featuredimage')[0].files[0].size;
-                var featured_image_extension=$('#featuredimage').val().replace(/^.*\./, '');
 
-            if( featured_image_size<=87031)
-            {
-              error_featuredimage_size="";
-              
-            }else
-            {
-              
-              error_featuredimage_size="has error";
-            }
-            
-          
-            if(featured_image_extension=="jpg" || featured_image_extension=="jpeg" ||featured_image_extension=="png")
-            {
-          
-              error_featuredimage_extention="";
-            
-            }else
-            { 
-          
-              error_featuredimage_extention="has error";
-            }
-            
-            
-            
-            if(error_featuredimage_extention !="" || error_featuredimage_size !="" )
-            {
-              
-              error_featured_image="The file must be either jpg, jpeg, png with file size less than 87031";
-              $("#featured_image_error").html(error_featured_image);
-              $("#featured_image_error").addClass('is-invalid');
-            }else{
-              error_featured_image="";
-              $("#featured_image_error").html(error_featured_image);
-              $("#featured_image_error").removeClass('is-invalid');
-            }
+  var method = location.pathname.split('/').pop();
+
+  if(method=="addcourses")
+  {
+            if ($('#featuredimage').get(0).files.length  != 0)     
+           {
+                          var featured_image_size=$('#featuredimage')[0].files[0].size;
+                          var featured_image_extension=$('#featuredimage').val().replace(/^.*\./, '');
+
+                      if( featured_image_size<=87031)
+                      {
+                        error_featuredimage_size="";
+                        
+                      }else
+                      {
+                        
+                        error_featuredimage_size="has error";
+                      }
+                      
+                    
+                      if(featured_image_extension=="jpg" || featured_image_extension=="jpeg" ||featured_image_extension=="png")
+                      {
+                    
+                        error_featuredimage_extention="";
+                      
+                      }else
+                      { 
+                    
+                        error_featuredimage_extention="has error";
+                      }
+                      
+                      
+                      
+                      if(error_featuredimage_extention !="" || error_featuredimage_size !="" )
+                      {
+                        
+                        error_featured_image="The file must be either jpg, jpeg, png with file size less than 87031";
+                        $("#featured_image_error").html(error_featured_image);
+                        $("#featured_image_error").addClass('is-invalid');
+                      }else{
+                        error_featured_image="";
+                        $("#featured_image_error").html(error_featured_image);
+                        $("#featured_image_error").removeClass('is-invalid');
+                      }
+
+          }else{
+
+                        error_featured_image="Featured image is required";
+                        $("#featured_image_error").html(error_featured_image);
+                        $("#featured_image_error").addClass('is-invalid');
+
+          }
+
 
 }
 
