@@ -25,7 +25,7 @@
                         <th>Menu Location</th>
                         <th>Priority</th>
                         <th>Submenu</th>
-                        <th>Pages</th>
+                      <!--   <th>Pages</th> -->
                         <th>Action</th>
                       </tr>
                     <?php foreach($pages as $page)
@@ -78,11 +78,11 @@
 
                             <a href="<?php echo site_url('Dashboard/submenus/'.$page['menuId']);?>"> View</a>
 
-                         <?php } ?>
+                         <?php }else {echo "Not applicable";} ?>
 
                                                   </td>
 
-                                                <td><?php echo $page['menuUrl'];?></td>
+                                                <!-- <td><?php echo $page['menuUrl'];?></td> -->
          <td><a class="btn btn-default" href="<?php echo site_url('Dashboard/editmainmenu/'.$page['menuId']);?>">Edit</a> 
 
 

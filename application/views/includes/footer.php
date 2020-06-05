@@ -3,7 +3,7 @@
     </section>
 
     <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
+      <p>Copyright CFOMAN, &copy; <?php echo date('Y');?></p>
     </footer>
 
  

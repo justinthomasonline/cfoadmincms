@@ -109,11 +109,16 @@
 
                   </div>
 
-                  <div class="checkbox">
-                  <label>
-                    <input type="checkbox" name="infoBoxed[]"  <?php if($cm['InfoBoxed']=="1") echo "checked"; ?> > Boxed
-                  </label>
-                </div>
+                
+                 <div class="form-group">
+                  <label>Boxed</label>
+                  <select name="infoBoxed[]" class="form-control">
+                    <option value="1" <?php if($cm['InfoBoxed']=="1") echo "selected";?> >Boxed</option>
+                    <option value="0" <?php if($cm['InfoBoxed']=="0") echo "selected";?> >Not boxed</option>
+                  </select>
+             
+               </div>
+
                   <hr>
 
                                <script>

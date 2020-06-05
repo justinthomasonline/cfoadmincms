@@ -37,7 +37,7 @@ foreach($result as $row)
         'Content_more'=>array());
 
 
-       $query1 = "select * from content_more where ContentId='$row->contentId'";
+       $query1 = "select * from content_more where ContentId='$row->contentId' ORDER BY CourseMoreId ASC ";
        $res1 = $this->db->query($query1);  
        $result1=$res1->result();
 
@@ -60,7 +60,51 @@ return json_encode($content,JSON_PRETTY_PRINT);
    }
 
 
+function getevents($pageurl)
+{
+  if($pageurl=="past_events")
+  {
+    $type="past";
+    $title="Past events";
+  }else  if($pageurl=="upcoming_events")
+  {
+    $type="upcoming";
+    $title="Upcoming events";
+  }
 
+     $query = "select * from contents where ContentType='Events' and category='$type'";
+    $res = $this->db->query($query);  
+    $result=$res->result();
+    $content= array();
+
+
+     $content[0]=array(
+        
+        
+        'ContentTitle'=>$title,
+        'ContentUrl'=>$pageurl,
+        'isPublished'=>1,
+        'isContactpage'=>0,
+        'Category'=>'Events',
+        'FeaturedImage'=>'',
+        'ContentMeta'=>$title,
+        'Content'=>"",
+        'Content_more'=>array());
+
+     foreach($result as $row)
+             {
+              $content[0]['Content_more'][]=array(
+
+                    'CourseMoreId'=>$row->contentId,
+                    'InfoTitle'=>$row->ContentTitle,
+                    'InfoMessage'=>$row->content,
+                    'InfoBoxed'=>"1"
+
+                );
+            }
+
+            return json_encode($content,JSON_PRETTY_PRINT);
+}
 
 function getmenu($menutype)
 {
@@ -225,6 +269,16 @@ public function insert_contact($contactData)
       $this->db->insert('contacts', $contactData);
       return $this->db->insert_id();
   }
+
+
+public function getforwardingmail()
+{
+  $q="select *  from contactformemail where emailId='1'";
+  $res=$this->db->query($q);
+
+  return $res->row();
+
+}
 
 
 }

@@ -24,18 +24,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">AdminStrap</a>
+          <a class="navbar-brand" href="#">CFOMAN</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+         <!--  <ul class="nav navbar-nav">
             <li class="active"><a href="index.html">Dashboard</a></li>
             <li><a href="<?php echo site_url('Dashboard/banners');?>">Home</a></li>
             <li><a href="<?php echo site_url('Dashboard/pages');?>">Pages</a></li>
             <li><a href="">Posts</a></li>
             <li><a href="">Users</a></li>
-          </ul>
+          </ul> -->
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Brad</a></li>
+            <li><a href="#">Welcome, <?php echo $this->session->auth['username']; ?></a></li>
             <li><a href="<?php echo site_url('Welcome/logout');?>">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -49,7 +49,7 @@
             <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard <small>Manage Your Site</small></h1>
           </div>
           <div class="col-md-2">
-            <div class="dropdown create">
+           <!--  <div class="dropdown create">
               <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 Create Content
                 <span class="caret"></span>
@@ -59,26 +59,26 @@
                 <li><a href="#">Add Post</a></li>
                 <li><a href="#">Add User</a></li>
               </ul>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
     </header>
 
-    <section id="breadcrumb">
+ <!--    <section id="breadcrumb">
       <div class="container">
         <ol class="breadcrumb">
           <li class="active">Dashboard</li>
         </ol>
       </div>
-    </section>
+    </section> -->
 
     <section id="main">
       <div class="container">
         <div class="row">
           <div class="col-md-3">
             <div class="list-group">
-              <a href="index.html" class="list-group-item active main-color-bg">
+              <a href="<?php echo site_url('Dashboard');?>" class="list-group-item active main-color-bg">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard
               </a>
               <a href="<?php echo site_url('Dashboard/pages');?>" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Pages </a>
@@ -96,16 +96,18 @@
 
                <!-- <a href="<?php echo site_url('Dashboard/submenus');?>" class="list-group-item"><span class="glyphicon glyphicon-align-center" aria-hidden="true"></span> sub menus </a> -->
 
+               <a href="<?php echo site_url('Dashboard/viewenquiry');?>" class="list-group-item"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Enquiry </a>
+
                <a href="<?php echo site_url('Dashboard/settings');?>" class="list-group-item"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> settings </a>
 
 
 
 
-              <a href="users.html" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users </a>
+              <a href="<?php echo site_url('Dashboard/user');?>" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users </a>
             </div>
 
             <div class="well">
-              <h4>Disk Space Used</h4>
+         <!--      <h4>Disk Space Used</h4>
               <div class="progress">
                   <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
                       60%
@@ -116,6 +118,6 @@
                 <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
                     40%
             </div>
-          </div>
+          </div> -->
             </div>
           </div>

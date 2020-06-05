@@ -5,35 +5,52 @@
                 <h3 class="panel-title">Website Overview</h3>
               </div>
               <div class="panel-body">
+               
                 <div class="col-md-3">
                   <div class="well dash-box">
-                    <h2><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 203</h2>
-                    <h4>Users</h4>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="well dash-box">
-                    <h2><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 12</h2>
+                    <h2><span class="glyphicon glyphicon-list-alt" aria-hidden="true">
+                      
+                    </span><?php echo $pagecount;?></h2>
                     <h4>Pages</h4>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="well dash-box">
-                    <h2><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 33</h2>
-                    <h4>Posts</h4>
+                    <h2><span class="glyphicon glyphicon-education" aria-hidden="true"></span>
+                    <?php echo $coursecount;?></h2>
+                    <h4>Courses</h4>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="well dash-box">
-                    <h2><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 12,334</h2>
-                    <h4>Visitors</h4>
+                    <h2><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> 
+                      <?php echo $eventcount;?></h2>
+                    <h4>Events</h4>
                   </div>
                 </div>
+
+                 <div class="col-md-3">
+                  <div class="well dash-box">
+                    <h2><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span>
+                     <?php echo $partnercount;?></h2>
+                    <h4>Partners</h4>
+                  </div>
+                </div>
+
+
+                 <div class="col-md-3">
+                  <div class="well dash-box">
+                    <h2><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                     <?php echo $unreadenquirycount;?></h2>
+                    <h4>New messages</h4>
+                  </div>
+                </div>
+
               </div>
               </div>
 
               <!-- Latest Users -->
-              <div class="panel panel-default">
+              <!-- <div class="panel panel-default">
                 <div class="panel-heading">
                   <h3 class="panel-title">Latest Users</h3>
                 </div>
@@ -71,5 +88,5 @@
                       </tr>
                     </table>
                 </div>
-              </div>
+              </div> -->
           </div>

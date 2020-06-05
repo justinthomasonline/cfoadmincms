@@ -36,16 +36,35 @@ class Dashboard extends CI_Controller {
   }
 
 
+
     
   public function index()
   {
-      $this->load->view('includes/header');
+
+      $data['pagecount'] =  $this->Contents->getcount('Page');
+      $data['coursecount'] =  $this->Contents->getcount('Course');
+      $data['eventcount'] =  $this->Contents->getcount('Events');
+      $data['partnercount'] =  $this->Contents->getcount('Partners');
+      $data['unreadenquirycount'] =  $this->Contents->getenqcount();
+
+
+      $this->load->view('includes/header',$data);
       $this->load->view('dashboard/dashboard');
       $this->load->view('includes/footer');
 
   }
 
-
+public function seo_friendly_url($string)
+{
+  
+    $string = str_replace(array('[\', \']'), '', $string);
+    $string = preg_replace('/\[.*\]/U', '', $string);
+    $string = preg_replace('/&(amp;)?#?[a-z0-9]+;/i', '-', $string);
+    $string = htmlentities($string, ENT_COMPAT, 'utf-8');
+    $string = preg_replace('/&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig|quot|rsquo);/i', '\\1', $string );
+    $string = preg_replace(array('/[^a-z0-9]/i', '/[-]+/') , '-', $string);
+    return strtolower(trim($string, '-'));
+}
 
   public function pages()
   {
@@ -129,7 +148,7 @@ class Dashboard extends CI_Controller {
     
       $featured_image="";
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']);  
         $data = array(
             'ContentType'=>'Page',
             'ContentTitle'=>$_POST['title'],
@@ -209,7 +228,7 @@ class Dashboard extends CI_Controller {
             $featured_image="";
         }
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $course_content = array(
             'ContentType'=>'Course',
             'ContentTitle'=>$_POST['title'],
@@ -242,7 +261,7 @@ class Dashboard extends CI_Controller {
   function check_unique($str)
 {
 
-$contentUrl = preg_replace('/\s+/', '_',$str); 
+$contentUrl = $this->seo_friendly_url($str); 
 $result = $this->Contents->Checkunique($contentUrl);
 return $result;
 
@@ -256,7 +275,7 @@ return $result;
 function ajax_check_unique()
 {
   
-$contentUrl = preg_replace('/\s+/', '_',$_POST['content_url']); 
+$contentUrl = $this->seo_friendly_url($_POST['content_url']); 
 $result = $this->Contents->Checkunique($contentUrl);
     if($result)
     {
@@ -357,7 +376,7 @@ $result = $this->Contents->Checkunique($contentUrl);
     
         $featured_image="";
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $data = array(
             'ContentType'=>'Events',
             'ContentTitle'=>$_POST['title'],
@@ -622,7 +641,7 @@ function addpartners()
             $featured_image="";
         }
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $course_content = array(
             'ContentType'=>'Partners',
             'ContentTitle'=>$_POST['title'],
@@ -796,7 +815,7 @@ function editpages($id="")
     
       $featured_image="";
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $data = array(
             'ContentType'=>'Page',
             'ContentTitle'=>trim($_POST['title']),
@@ -835,16 +854,17 @@ function ajax_deletecontent()
 
 function ajax_check_unique_updation()
 {
+  
 
- $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
- $result=$this->Contents->ajax_check_unique_updation('contents', $_POST['contentId'], $contentUrl);
-      if($result)
-      {
-        echo 1;
-      }else
-      {
-        echo 0;
-      }
+  $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
+  $result=$this->Contents->ajax_check_unique_updation('contents', $_POST['contentId'], $contentUrl);
+       if($result)
+       {
+         echo 1;
+       }else
+       {
+         echo 0;
+       }
  }
 
 
@@ -890,7 +910,7 @@ function ajax_check_unique_updation()
     
   
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $data = array(
             'ContentType'=>'Course',
             'ContentTitle'=>trim($_POST['title']),
@@ -988,7 +1008,7 @@ function editevents($id="")
     
       $featured_image="";
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $data = array(
             'ContentType'=>'Events',
             'ContentTitle'=>trim($_POST['title']),
@@ -1063,7 +1083,7 @@ function editpartners($id="")
     
   
 
-        $contentUrl = preg_replace('/\s+/', '_', $_POST['content_url']); 
+        $contentUrl = $this->seo_friendly_url($_POST['content_url']); 
         $data = array(
             'ContentType'=>'Partners',
             'ContentTitle'=>trim($_POST['title']),
@@ -1449,7 +1469,68 @@ function check_equalEmail($Carboncopy, $primary)
 }
 
 
+function viewenquiry()
+{
 
+   $data['title']="List messages";
+
+   $data['messages']=$this->Contents->getallmessages();
+   $this->load->view('includes/header',$data);
+   $this->load->view('dashboard/allenquiry');
+   $this->load->view('includes/footer');
+
+}
+
+public function viewmessage($id="")
+{
+
+   $data['title']="View messages";
+
+   $message=$this->Contents->getmessage($id);
+   $data['name']=$message->name;
+   $data['phone']=$message->phone;
+   $data['email']=$message->email;
+   $data['message']=$message->message;
+   $data['time']=$message->created_at;
+   
+
+   $this->load->view('includes/header',$data);
+   $this->load->view('dashboard/viewmessage');
+   $this->load->view('includes/footer');
+
+}
+ 
+function user()
+{
+
+    $this->form_validation->set_rules('password', 'password', 'required'); 
+    $this->form_validation->set_rules('password1', 'confrom Password', 'required'); 
+    $this->form_validation->set_rules('password1', 'Confirm Password', 'required|matches[password]');
+    
+
+    if ($this->form_validation->run() == FALSE) { 
+   $data['title']="update password";
+   $this->load->view('includes/header',$data);
+   $this->load->view('dashboard/user');
+   $this->load->view('includes/footer');
+ }
+ else
+ {
+
+
+      $result = $this->Contents->updateuser(md5($_POST['password']));
+       if($result==1)
+       {
+        $this->session->set_flashdata('msg_success', 'Successfully Updated');
+       }else{
+        $this->session->set_flashdata('msg_error', 'Unable to update, try later');
+       }
+
+       redirect('Dashboard');
+
+ }
+
+}
 
 
 }

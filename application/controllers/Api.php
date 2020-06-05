@@ -46,7 +46,13 @@ class Api extends CI_Controller {
 	public function index($pageurl="")
 	{
 		
+		if($pageurl=="upcoming_events" || $pageurl=="past_events" )
+		{
+			$result = $this->Apimodel->getevents($pageurl);
+		}else
+		{
 		$result = $this->Apimodel->getcontent1($pageurl);
+		}
 		echo $result;
 
 	 	// echo '<pre>';
@@ -87,7 +93,7 @@ class Api extends CI_Controller {
 	 	$request = json_decode($postdata,true);
        
 
-       if( ! empty($formdata)) {
+       if( ! empty($request)) {
           $name = $request['name'];
           $email = $request['email'];
           $phone = $request['phone'];
@@ -98,9 +104,9 @@ class Api extends CI_Controller {
               'email' => $email,
               'phone' => $phone,
               'message' => $message,
-              'created_at' => date('Y-m-d H:i:s', time())
+              'created_at' => date('Y-m-d H:i:s', time()),
+              'status'=>0
           );
-
 
           $id = $this->Apimodel->insert_contact($contactData);
 
@@ -123,6 +129,11 @@ class Api extends CI_Controller {
 
 	 	 public function sendemail($contactData)
   {
+
+  	  $emails = $this->Apimodel->getforwardingmail();
+
+  	  
+
       $message = '<p>Hi, <br />Some one has submitted contact form.</p>';
       $message .= '<p><strong>Name: </strong>'.$contactData['name'].'</p>';
       $message .= '<p><strong>Email: </strong>'.$contactData['email'].'</p>';
@@ -140,12 +151,12 @@ class Api extends CI_Controller {
 
       $this->email->initialize($config);
 
-      $this->email->from('demo@rsgitech.com', 'RSGiTECH');
-      $this->email->to('demo2@rsgitech.com');
-      $this->email->cc('another@rsgitech.com');
-      $this->email->bcc('them@rsgitech.com');
+      $this->email->from('direction@cfoman.org', 'direction');
+      $this->email->to($emails->PrimaryEmail);
+      $this->email->cc($emails->CarbonCopy);
+     // $this->email->bcc('them@rsgitech.com');
 
-      $this->email->subject('Contact Form');
+      $this->email->subject('Enquiry through website');
       $this->email->message($message);
 
       $this->email->send();

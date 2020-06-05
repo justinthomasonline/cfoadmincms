@@ -47,7 +47,12 @@
 
                                  foreach($menucontents as $row)
                                   { ?>
-           <option value="<?php echo $row['contentUrl'];?>" <?php echo set_select('maincorrespondingpage',  $row['contentUrl']); ?> > <?php echo strtoupper($row['ContentTitle']);?></option>
+           <option value="<?php echo $row['contentUrl'];?>" <?php echo set_select('maincorrespondingpage',  $row['contentUrl']); ?> >
+            <?php echo strtoupper($row['ContentTitle']).'-'.$row['ContentType'];?>
+              
+
+
+            </option>
                 
                                  <?php 
 

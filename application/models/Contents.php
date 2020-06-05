@@ -46,12 +46,30 @@ class Contents extends CI_Model {
  function Update($table,$data,$id)
    {
     $this->db->trans_start();
+
+    $q="select contentUrl from contents where contentId='$id'";
+
+     $res = $this->db->query($q);  
+     $old_url=$res->row()->contentUrl; 
     
     $this->db->where('contentId', $id);
-   $this->db->update($table, $data);
+    $this->db->update($table, $data);
+
+ 
+
+if($data['contentUrl']!=$old_url)
+{
+
+ $updatequery= "update menus set menuUrl='$data[contentUrl]' where  menuUrl = '$old_url'";
+ $res = $this->db->query($updatequery);  
+
+ $updatequery= "update submenu set subMenuUrl='$data[contentUrl]' where  subMenuUrl = '$old_url'";
+ $res = $this->db->query($updatequery);
+
+   
+}
 
   
-
    
 if(isset($_POST['infoTitle']))
     {
@@ -616,6 +634,51 @@ function updatemailforwardsetting($data)
    $this->db->update('contactformemail', $data);
 
    return 1;
+}
+
+
+function getallmessages()
+{
+  $q="select *  from contacts order by id DESC";
+  $res=$this->db->query($q);
+
+  return $res->result("array");
+
+}
+
+function getmessage($id)
+{
+  $q="select *  from contacts where id='$id'";
+  $res=$this->db->query($q);
+
+  $q1="UPDATE contacts SET status='1' WHERE id='$id'";
+  $this->db->query($q1); 
+
+  return $res->row();
+}
+
+function updateuser($pwd)
+{
+  $q1="UPDATE users SET password='$pwd' WHERE id='1'";
+  $this->db->query($q1); 
+  return true;
+
+}
+
+function getcount($type)
+{
+
+  $query="select contentId from contents where ContentType='$type'";
+  $res=$this->db->query($query);
+  return $this->db->affected_rows();
+
+}
+
+function getenqcount()
+{
+  $query="select id from contacts where status='0'";
+  $res=$this->db->query($query);
+  return $this->db->affected_rows();
 }
 
 }

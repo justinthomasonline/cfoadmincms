@@ -47,7 +47,11 @@
 
                                  foreach($menucontents as $row)
                                   { ?>
-<option value="<?php echo $row['contentUrl'];?>" <?php if($row['contentUrl']==$submenu->subMenuUrl) echo "selected";?> > <?php echo strtoupper($row['ContentTitle']);?></option>
+<option value="<?php echo $row['contentUrl'];?>" <?php if($row['contentUrl']==$submenu->subMenuUrl) echo "selected";?> >
+ <?php echo strtoupper($row['ContentTitle']).'-'.$row['ContentType'];?>
+   
+   
+ </option>
                 
                                  <?php 
 

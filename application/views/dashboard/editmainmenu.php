@@ -42,7 +42,7 @@
 
                                  foreach($menucontents as $row)
                                   { ?>
-                          <option value="<?php echo $row['contentUrl'];?>" <?php echo set_select('maincorrespondingpage',  $mainmenu[0]['menuUrl']); ?>><?php echo $row['ContentTitle'];?> - <?php echo $row['ContentType'];?></option>
+                          <option value="<?php echo $row['contentUrl'];?>" <?php if($mainmenu[0]['menuUrl']==$row['contentUrl']) echo "selected"; ?> ><?php echo $row['ContentTitle'];?> - <?php echo $row['ContentType'];?></option>
                 
                                  <?php 
 
